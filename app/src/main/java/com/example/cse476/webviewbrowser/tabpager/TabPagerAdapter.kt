@@ -15,6 +15,11 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 
 class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity), ITabPagerAdapter {
+    override val tabListReadOnly: List<WebViewFragmentActivity>
+        get() {
+            return tabList
+        }
+
     private val tabList: MutableList<WebViewFragmentActivity> =
         mutableListOf(WebViewFragmentFactory.NewWebViewFragment(0, this))
     private val tabLayout = fragmentActivity.findViewById<TabLayout>(R.id.tabLayout)
@@ -24,11 +29,6 @@ class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
         fragmentActivity.resources.displayMetrics
     )
     private val textEdit = fragmentActivity.findViewById<TextInputEditText>(R.id.urlField)
-
-    override val tabListReadOnly: List<WebViewFragmentActivity>
-        get() {
-            return tabList
-        }
 
     override fun getItemCount(): Int {
         return this.tabList.count()
@@ -66,8 +66,6 @@ class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
 
         tab?.text = webSiteName
     }
-
-
 
     override fun setIcon(index: Int) {
         val tab = this.tabLayout.getTabAt(index)
