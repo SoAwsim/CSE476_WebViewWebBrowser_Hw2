@@ -3,6 +3,7 @@ package com.example.cse476.webviewbrowser.controller.webview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -27,7 +28,8 @@ class WebViewControllerFactory {
         webView: WebView,
         index: Int,
         context: Context,
-        webSite: String? = null
+        webSite: String? = null,
+        webViewState: Bundle? = null
     ): WebViewController {
         val controller = WebViewController()
         controller.updateWebSiteName("Tab " + (index + 1))
@@ -37,7 +39,8 @@ class WebViewControllerFactory {
             webView,
             index,
             context,
-            webSite
+            webSite,
+            webViewState
         )
 
         return controller
@@ -49,7 +52,8 @@ class WebViewControllerFactory {
         webView: WebView,
         index: Int,
         context: Context,
-        webSite: String? = null
+        webSite: String? = null,
+        webViewState: Bundle? = null
     ) {
         controller.attachResources(context.resources)
         controller.attachWebView(webView)
@@ -78,6 +82,7 @@ class WebViewControllerFactory {
                 return false
             }
 
+            @Deprecated("Deprecated in Java", ReplaceWith("false"))
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 url: String?
@@ -91,6 +96,8 @@ class WebViewControllerFactory {
             }
         }
         webView.settings.javaScriptEnabled = true
+        if (webViewState != null)
+            webView.restoreState(webViewState)
 
         if (webSite != null)
             controller.goToWebSite(webSite)

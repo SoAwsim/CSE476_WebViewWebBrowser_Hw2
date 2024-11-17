@@ -1,8 +1,8 @@
 package com.example.cse476.webviewbrowser.controller.browser
 
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.cse476.webviewbrowser.MainActivity
 import com.example.cse476.webviewbrowser.R
 import com.example.cse476.webviewbrowser.controller.webview.WebViewControllerFactory
 import com.example.cse476.webviewbrowser.tabpager.TabPagerAdapter
@@ -10,7 +10,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
 
-class BrowserControllerFactory(activity: AppCompatActivity) {
+class BrowserControllerFactory(activity: MainActivity) {
     private val _activity = activity
     private lateinit var _browserController: BrowserController
 

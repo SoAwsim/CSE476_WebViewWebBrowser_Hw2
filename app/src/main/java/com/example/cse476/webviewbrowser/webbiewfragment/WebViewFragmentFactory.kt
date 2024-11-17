@@ -5,7 +5,7 @@ import android.os.Bundle
 class WebViewFragmentFactory {
     companion object {
         @JvmStatic
-        fun NewWebViewFragment(index: Int) =
+        fun newWebViewFragment(index: Int) =
             WebViewFragmentActivity().apply {
                 arguments = Bundle().apply {
                     putInt(TAB_INDEX, index)

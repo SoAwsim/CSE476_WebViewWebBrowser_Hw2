@@ -38,7 +38,8 @@ class WebViewController() : Parcelable {
         }
 
     // Attachable
-    private var _webView : WebView? = null
+    var _webView : WebView? = null
+        private set
     private var _resources: Resources? = null
 
     // Parcelable
@@ -92,6 +93,7 @@ class WebViewController() : Parcelable {
         this._webView?.stopLoading()
         this._webView?.removeAllViews()
         this._webView?.destroy()
+        this._webView = null
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

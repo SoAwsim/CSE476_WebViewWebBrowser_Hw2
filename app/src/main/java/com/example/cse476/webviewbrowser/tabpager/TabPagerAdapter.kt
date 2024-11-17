@@ -1,24 +1,24 @@
 package com.example.cse476.webviewbrowser.tabpager
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.cse476.webviewbrowser.MainActivity
 import com.example.cse476.webviewbrowser.R
+import com.example.cse476.webviewbrowser.webbiewfragment.TAB_INDEX
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentActivity
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 
 class TabPagerAdapter(
-    fragmentActivity: FragmentActivity
+    fragmentActivity: MainActivity,
 ) : FragmentStateAdapter(fragmentActivity), ITabPagerAdapter {
     override val tabListReadOnly: List<WebViewFragmentActivity>
         get() {
             return tabList
         }
 
-    private val tabList: MutableList<WebViewFragmentActivity> =
-        mutableListOf(WebViewFragmentFactory.NewWebViewFragment(0))
+    private val tabList: MutableList<WebViewFragmentActivity> = fragmentActivity.tabList
     private val tabLayout = fragmentActivity.findViewById<TabLayout>(R.id.tabLayout)
     private val textEdit = fragmentActivity.findViewById<TextInputEditText>(R.id.urlField)
 
@@ -27,13 +27,21 @@ class TabPagerAdapter(
     }
 
     override fun createFragment(position: Int): Fragment {
-        return this.tabList[position];
+        return this.tabList[position]
+    }
+
+    override fun getItemId(position: Int): Long {
+        return tabList[position].arguments?.getInt(TAB_INDEX)?.toLong() ?: position.toLong()
+    }
+
+    override fun containsItem(itemId: Long): Boolean {
+        return tabList.any { it.arguments?.getInt(TAB_INDEX)?.toLong() == itemId }
     }
 
     override fun createNewTab() {
         val addedIndex = tabList.count()
-        this.tabList.add(WebViewFragmentFactory.NewWebViewFragment(addedIndex))
-        this.notifyItemInserted(addedIndex);
+        this.tabList.add(WebViewFragmentFactory.newWebViewFragment(addedIndex))
+        this.notifyItemInserted(addedIndex)
     }
 
     override fun setTabName(index: Int) {
