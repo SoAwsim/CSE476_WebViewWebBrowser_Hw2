@@ -9,8 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.cse476.webviewbrowser.controller.browser.BrowserControllerFactory
 
 class MainActivity : AppCompatActivity() {
-    companion object{
+    companion object {
         var textSize: Float = 16f
+            private set
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        // Set correct text size for tab names, used for web site icons
         textSize = TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             16f,
