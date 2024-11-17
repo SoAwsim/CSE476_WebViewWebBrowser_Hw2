@@ -1,6 +1,5 @@
 package com.example.cse476.webviewbrowser.tabpager
 
-import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -19,11 +18,6 @@ class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
     private val tabList: MutableList<WebViewFragmentActivity> =
         mutableListOf(WebViewFragmentFactory.NewWebViewFragment(0))
     private val tabLayout = fragmentActivity.findViewById<TabLayout>(R.id.tabLayout)
-    private val textSize = TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_SP,
-        16f,
-        fragmentActivity.resources.displayMetrics
-    )
     private val textEdit = fragmentActivity.findViewById<TextInputEditText>(R.id.urlField)
 
     override fun getItemCount(): Int {
