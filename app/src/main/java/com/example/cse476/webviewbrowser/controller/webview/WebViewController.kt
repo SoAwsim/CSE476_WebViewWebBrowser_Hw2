@@ -80,7 +80,7 @@ class WebViewController() : Parcelable {
         this._webView?.onPause()
     }
 
-    fun continueWebView() {
+    fun resumeWebView() {
         this._webView?.onResume()
     }
 

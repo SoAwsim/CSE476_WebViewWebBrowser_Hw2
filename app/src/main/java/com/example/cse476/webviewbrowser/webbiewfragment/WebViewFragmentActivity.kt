@@ -66,7 +66,7 @@ class WebViewFragmentActivity : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        this.webViewController?.continueWebView()
+        this.webViewController?.resumeWebView()
     }
 
     override fun onPause() {
