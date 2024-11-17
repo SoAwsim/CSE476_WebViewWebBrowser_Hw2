@@ -1,5 +1,6 @@
 package com.example.cse476.webviewbrowser.webbiewfragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.example.cse476.webviewbrowser.controller.webview.WebViewControllerFac
 
 const val TAB_INDEX = "tab_index"
 const val WEBSITE_NAME = "web_site_name"
+private const val CONTROLLER = "webview_controller"
 
 class WebViewFragmentActivity : Fragment() {
     private var _index: Int = -1
@@ -25,25 +27,41 @@ class WebViewFragmentActivity : Fragment() {
             this._index = it!!.getInt(TAB_INDEX)
         }
         this._index = savedInstanceState?.getInt(TAB_INDEX) ?: this._index
+        this.webViewController = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            savedInstanceState?.getParcelable(CONTROLLER, WebViewController::class.java)
+        } else {
+            savedInstanceState?.getParcelable(CONTROLLER)
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_web_view, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val webView = this.requireView().findViewById<WebView>(R.id.webView)
-        this.webViewController = WebViewControllerFactory.newWebViewController(
-            webView,
-            this._index,
-            this.requireContext(),
-            savedInstanceState?.getString(WEBSITE_NAME)
-        )
+        val factory = WebViewControllerFactory()
+        val webSite = savedInstanceState?.getString(WEBSITE_NAME)
+        if (this.webViewController == null) {
+            this.webViewController = factory.newWebViewController(
+                webView,
+                this._index,
+                this.requireContext(),
+                webSite
+            )
+        } else {
+            factory.setupController(
+                this.webViewController!!,
+                webView,
+                this._index,
+                this.requireContext(),
+                webSite
+            )
+        }
     }
 
     override fun onResume() {
@@ -60,6 +78,7 @@ class WebViewFragmentActivity : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putInt(TAB_INDEX, this._index)
         outState.putString(WEBSITE_NAME, this.webViewController?.getUrl())
+        outState.putParcelable(CONTROLLER, webViewController)
     }
 
     override fun onDestroyView() {

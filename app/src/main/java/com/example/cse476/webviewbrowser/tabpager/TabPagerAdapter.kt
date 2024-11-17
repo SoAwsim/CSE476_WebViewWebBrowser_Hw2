@@ -9,7 +9,9 @@ import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
 
-class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity), ITabPagerAdapter {
+class TabPagerAdapter(
+    fragmentActivity: FragmentActivity
+) : FragmentStateAdapter(fragmentActivity), ITabPagerAdapter {
     override val tabListReadOnly: List<WebViewFragmentActivity>
         get() {
             return tabList
