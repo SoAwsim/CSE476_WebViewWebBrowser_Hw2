@@ -1,12 +1,47 @@
 package com.example.cse476.webviewbrowser.controller.webview
 
 import android.graphics.drawable.Drawable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ImageSpan
 import android.webkit.WebView
+import com.example.cse476.webviewbrowser.MainActivity
 
 class WebViewController(webView: WebView, index: Int) {
+    val tabName : SpannableString
+        get() {
+            if (this._icon == null)
+                return SpannableString(this._webSiteName)
+
+            val span = SpannableString("  " + this._webSiteName)
+            val aspectRatio =
+                this._icon!!.intrinsicWidth.toFloat() / this._icon!!.intrinsicHeight.toFloat()
+            this._icon!!.setBounds(
+                0,
+                0,
+                (MainActivity.textSize * aspectRatio).toInt(),
+                MainActivity.textSize.toInt()
+            )
+            span.setSpan(
+                ImageSpan(this._icon!!, ImageSpan.ALIGN_BOTTOM),
+                0,
+                1,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            return span
+        }
+
     private val _webView = webView
-    var webSiteName: String = "Tab " + (index + 1)
-    var icon: Drawable? = null
+    private var _webSiteName: String = "Tab " + (index + 1)
+    private var _icon: Drawable? = null
+
+    fun updateWebSiteName(name: String) {
+        this._webSiteName = name
+    }
+
+    fun updateWebSiteIcon(icon: Drawable?) {
+        this._icon = icon
+    }
 
     fun goToWebSite(url: String) {
         this._webView.loadUrl(url)

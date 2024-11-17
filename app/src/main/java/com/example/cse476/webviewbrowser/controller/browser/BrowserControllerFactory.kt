@@ -4,6 +4,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.cse476.webviewbrowser.R
+import com.example.cse476.webviewbrowser.controller.webview.WebViewControllerFactory
 import com.example.cse476.webviewbrowser.tabpager.TabPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -18,12 +19,13 @@ class BrowserControllerFactory(activity: AppCompatActivity) {
         val tabLayout = this._activity.findViewById<TabLayout>(R.id.tabLayout)
         val text = this._activity.findViewById<TextInputEditText>(R.id.urlField)
         val adapter = TabPagerAdapter(this._activity)
+        WebViewControllerFactory.setTabPager(adapter)
         this._browserController = BrowserController(adapter, tabLayout, text)
         this.initializeButtons()
 
         viewPager2.adapter = adapter
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.text = adapter.tabListReadOnly[position].webViewController?.webSiteName
+            tab.text = adapter.tabListReadOnly[position].webViewController?.tabName
                 ?: ("Tab " + (position + 1))
         }.attach()
     }

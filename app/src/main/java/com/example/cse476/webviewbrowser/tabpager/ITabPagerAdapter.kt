@@ -9,6 +9,5 @@ interface ITabPagerAdapter {
     fun closeTab(position: Int)
     fun setTabName(index: Int)
     fun goToWebSiteTab(index: Int, site: String)
-    fun setIcon(index: Int)
     fun setUrl(url: String)
 }

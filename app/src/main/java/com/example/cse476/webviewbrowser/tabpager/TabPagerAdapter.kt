@@ -1,9 +1,5 @@
 package com.example.cse476.webviewbrowser.tabpager
 
-import android.graphics.drawable.Drawable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ImageSpan
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -21,7 +17,7 @@ class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
         }
 
     private val tabList: MutableList<WebViewFragmentActivity> =
-        mutableListOf(WebViewFragmentFactory.NewWebViewFragment(0, this))
+        mutableListOf(WebViewFragmentFactory.NewWebViewFragment(0))
     private val tabLayout = fragmentActivity.findViewById<TabLayout>(R.id.tabLayout)
     private val textSize = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_SP,
@@ -40,36 +36,13 @@ class TabPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter
 
     override fun createNewTab() {
         val addedIndex = tabList.count()
-        this.tabList.add(WebViewFragmentFactory.NewWebViewFragment(addedIndex, this))
+        this.tabList.add(WebViewFragmentFactory.NewWebViewFragment(addedIndex))
         this.notifyItemInserted(addedIndex);
     }
 
     override fun setTabName(index: Int) {
         val tab = this.tabLayout.getTabAt(index)
-        val controller = this.tabList[index].webViewController
-        val webSiteName: SpannableString
-        if (controller?.icon != null) {
-            webSiteName = SpannableString("  " + controller.webSiteName)
-            val icon: Drawable = controller.icon!!
-            val aspectRatio = icon.intrinsicWidth.toFloat() / icon.intrinsicHeight
-            icon.setBounds(0, 0, (textSize * aspectRatio).toInt(), textSize.toInt())
-            webSiteName.setSpan(
-                ImageSpan(icon, ImageSpan.ALIGN_BOTTOM),
-                0,
-                1,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        else {
-            webSiteName = SpannableString(controller?.webSiteName)
-        }
-
-        tab?.text = webSiteName
-    }
-
-    override fun setIcon(index: Int) {
-        val tab = this.tabLayout.getTabAt(index)
-        tab?.icon = this.tabList[index].webViewController?.icon
+        tab?.text = this.tabList[index].webViewController?.tabName
     }
 
     override fun setUrl(url: String) {
