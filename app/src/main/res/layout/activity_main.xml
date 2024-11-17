@@ -20,12 +20,11 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/urlLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:scrollbars="horizontal"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/goButton"
-        app:layout_constraintBottom_toTopOf="@id/tabGuideline">
+        app:layout_constraintEnd_toStartOf="@id/goButton" >
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/urlField"
@@ -41,38 +40,38 @@
 
     <Button
         android:id="@+id/goButton"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="Go!"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        app:layout_constraintStart_toEndOf="@id/urlLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go!"
+        app:layout_constraintBottom_toTopOf="@+id/webViewPager"
         app:layout_constraintEnd_toStartOf="@id/newTabButton"
-        app:layout_constraintBottom_toTopOf="@id/tabGuideline" />
+        app:layout_constraintStart_toEndOf="@id/urlLayout"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
     <Button
         android:id="@+id/newTabButton"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="New Tab"
         style="@style/Widget.MaterialComponents.Button.TextButton"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        app:layout_constraintStart_toEndOf="@id/goButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tabGuideline" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/tabGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.15" />
+        android:text="New Tab"
+        app:layout_constraintBottom_toTopOf="@+id/webViewPager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/goButton"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="urlLayout, goButton, newTabButton" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/webViewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tabGuideline"
+        app:layout_constraintTop_toTopOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
