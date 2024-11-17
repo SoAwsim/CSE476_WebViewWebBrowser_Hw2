@@ -12,7 +12,21 @@ class WebViewController(webView: WebView, index: Int) {
         this._webView.loadUrl(url)
     }
 
+    fun pauseWebView() {
+        this._webView.onPause()
+    }
+
+    fun continueWebView() {
+        this._webView.onResume()
+    }
+
     fun getUrl(): String {
         return this._webView.url ?: ""
+    }
+
+    fun stopWebView() {
+        this._webView.stopLoading()
+        this._webView.removeAllViews()
+        this._webView.destroy()
     }
 }

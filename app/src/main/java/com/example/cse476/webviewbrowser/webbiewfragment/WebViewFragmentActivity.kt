@@ -8,10 +8,11 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.example.cse476.webviewbrowser.R
 import com.example.cse476.webviewbrowser.controller.webview.WebViewController
-import com.example.cse476.webviewbrowser.controller.webview.WebViewControllerFactory
+import com.example.cse476.webviewbrowser.controller.webview.webViewControllerFactory
 import com.example.cse476.webviewbrowser.tabpager.ITabPagerAdapter
 
 const val TAB_INDEX = "tab_index"
+const val WEBSITE_NAME = "web_site_name"
 
 class WebViewFragmentActivity(tabPagerAdapter: ITabPagerAdapter) : Fragment() {
     private val _tabPagerAdapter = tabPagerAdapter
@@ -25,6 +26,7 @@ class WebViewFragmentActivity(tabPagerAdapter: ITabPagerAdapter) : Fragment() {
         arguments.let {
             this._index = it!!.getInt(TAB_INDEX)
         }
+        this._index = savedInstanceState?.getInt(TAB_INDEX) ?: this._index
     }
 
     override fun onCreateView(
@@ -38,11 +40,33 @@ class WebViewFragmentActivity(tabPagerAdapter: ITabPagerAdapter) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val webView = this.requireView().findViewById<WebView>(R.id.webView)
-        this.webViewController = WebViewControllerFactory.newWebViewController(
+        this.webViewController = webViewControllerFactory(
             webView,
             this._index,
             this._tabPagerAdapter,
-            this.requireContext()
+            this.requireContext(),
+            savedInstanceState?.getString(WEBSITE_NAME)
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        this.webViewController?.continueWebView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        this.webViewController?.pauseWebView()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(TAB_INDEX, this._index)
+        outState.putString(WEBSITE_NAME, this.webViewController?.getUrl())
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        this.webViewController?.stopWebView()
     }
 }
