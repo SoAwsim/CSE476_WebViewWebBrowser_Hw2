@@ -5,12 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.viewpager2.widget.ViewPager2
-import com.example.cse476.webviewbrowser.Controller.BrowserControllerFactory
-import com.example.cse476.webviewbrowser.TabPager.TabPagerAdapter
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.tabs.TabLayoutMediator.TabConfigurationStrategy
+import com.example.cse476.webviewbrowser.controller.browser.BrowserControllerFactory
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +18,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        BrowserControllerFactory(this).CreateBrowserController()
+        BrowserControllerFactory(this).createBrowserController()
     }
 }
