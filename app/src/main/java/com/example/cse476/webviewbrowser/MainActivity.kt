@@ -7,10 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.cse476.webviewbrowser.controller.browser.BrowserControllerFactory
-import com.example.cse476.webviewbrowser.webbiewfragment.TAB_INDEX
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentActivity
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
-import java.util.ArrayList
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -55,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val indices = tabList.map { it.arguments?.getInt(TAB_INDEX) ?: 0 } as ArrayList
+        val indices = tabList.map { it.arguments?.getInt(WebViewFragmentActivity.TAB_INDEX) ?: 0 } as ArrayList
         outState.putIntegerArrayList(TAB, indices)
     }
 }

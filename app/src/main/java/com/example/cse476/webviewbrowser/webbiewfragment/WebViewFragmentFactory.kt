@@ -8,7 +8,7 @@ class WebViewFragmentFactory {
         fun newWebViewFragment(index: Int) =
             WebViewFragmentActivity().apply {
                 arguments = Bundle().apply {
-                    putInt(TAB_INDEX, index)
+                    putInt(WebViewFragmentActivity.TAB_INDEX, index)
                 }
             }
     }

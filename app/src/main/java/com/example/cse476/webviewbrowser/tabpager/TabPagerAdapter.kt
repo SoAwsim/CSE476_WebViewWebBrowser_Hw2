@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.cse476.webviewbrowser.MainActivity
 import com.example.cse476.webviewbrowser.R
-import com.example.cse476.webviewbrowser.webbiewfragment.TAB_INDEX
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentActivity
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
 import com.google.android.material.tabs.TabLayout
@@ -31,11 +30,14 @@ class TabPagerAdapter(
     }
 
     override fun getItemId(position: Int): Long {
-        return tabList[position].arguments?.getInt(TAB_INDEX)?.toLong() ?: position.toLong()
+        return tabList[position].arguments?.getInt(WebViewFragmentActivity.TAB_INDEX)?.toLong()
+            ?: position.toLong()
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        return tabList.any { it.arguments?.getInt(TAB_INDEX)?.toLong() == itemId }
+        return tabList.any {
+            it.arguments?.getInt(WebViewFragmentActivity.TAB_INDEX)?.toLong() == itemId
+        }
     }
 
     override fun createNewTab() {
