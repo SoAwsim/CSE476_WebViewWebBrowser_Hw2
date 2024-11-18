@@ -20,7 +20,12 @@ class BrowserControllerFactory(activity: MainActivity) {
         val text = this._activity.findViewById<TextInputEditText>(R.id.urlField)
         val adapter = TabPagerAdapter(this._activity)
         WebViewControllerFactory.setTabPager(adapter)
-        this._browserController = BrowserController(adapter, tabLayout, text)
+        this._browserController = BrowserController(
+            adapter,
+            tabLayout,
+            text,
+            this._activity
+        )
         this.initializeButtons()
 
         viewPager2.adapter = adapter
