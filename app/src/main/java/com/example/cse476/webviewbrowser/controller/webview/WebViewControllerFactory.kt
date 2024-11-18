@@ -16,9 +16,6 @@ class WebViewControllerFactory {
 
         @JvmStatic
         fun setTabPager(pager: ITabPagerAdapter) {
-            if (_tabPagerAdapter != null)
-                return
-
             _tabPagerAdapter = pager
         }
     }
