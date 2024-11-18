@@ -23,7 +23,7 @@ class TabPagerAdapter(
     private val textEdit = fragmentActivity.findViewById<TextInputEditText>(R.id.urlField)
 
     override fun getItemCount(): Int {
-        return this.tabList.count()
+        return this.tabList.size
     }
 
     override fun createFragment(position: Int): Fragment {
@@ -39,7 +39,7 @@ class TabPagerAdapter(
     }
 
     override fun createNewTab() {
-        val addedIndex = tabList.count()
+        val addedIndex = tabList.size
         this.tabList.add(WebViewFragmentFactory.newWebViewFragment(addedIndex))
         this.notifyItemInserted(addedIndex)
     }
