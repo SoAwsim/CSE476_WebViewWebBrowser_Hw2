@@ -17,8 +17,4 @@ class BrowserController(tabPager: ITabPagerAdapter, tabLayout: TabLayout, text: 
         val index = this._tabLayout.selectedTabPosition
         this._tabPagerAdapter.goToWebSiteTab(index, this._textInput.text.toString())
     }
-
-    fun setUrlBar(url: String) {
-        this._textInput.setText(url)
-    }
 }
