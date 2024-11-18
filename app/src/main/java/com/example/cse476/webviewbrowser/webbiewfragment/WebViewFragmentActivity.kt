@@ -48,7 +48,7 @@ class WebViewFragmentActivity : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val webViewContainer = this.requireView().findViewById<FrameLayout>(R.id.webViewContainer)
         webViewContainer.removeAllViews()
-        val webView = this.webViewController?._webView ?: WebView(this.requireContext())
+        val webView = this.webViewController?.webView ?: WebView(this.requireContext())
         val factory = WebViewControllerFactory()
 
         val webSite = savedInstanceState?.getString(WEBSITE_NAME)
@@ -91,7 +91,7 @@ class WebViewFragmentActivity : Fragment() {
         outState.putParcelable(CONTROLLER, webViewController)
 
         val webViewState = Bundle()
-        this.webViewController?._webView?.saveState(webViewState)
+        this.webViewController?.webView?.saveState(webViewState)
         outState.putBundle(WEBVIEW_STATE, webViewState)
     }
 

@@ -58,6 +58,7 @@ class TabPagerAdapter(
     }
 
     override fun closeTab(position: Int) {
-        TODO("Not yet implemented")
+        this.tabList.removeAt(position)
+        this.notifyItemRemoved(position)
     }
 }

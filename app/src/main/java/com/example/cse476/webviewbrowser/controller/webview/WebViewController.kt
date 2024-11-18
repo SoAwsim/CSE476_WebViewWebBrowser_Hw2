@@ -38,7 +38,7 @@ class WebViewController() : Parcelable {
         }
 
     // Attachable
-    var _webView : WebView? = null
+    var webView : WebView? = null
         private set
     private var _resources: Resources? = null
 
@@ -61,8 +61,8 @@ class WebViewController() : Parcelable {
     }
 
     fun attachWebView(webView: WebView) {
-        if (this._webView == null)
-            this._webView = webView
+        if (this.webView == null)
+            this.webView = webView
     }
 
     fun updateWebSiteName(name: String) {
@@ -74,26 +74,26 @@ class WebViewController() : Parcelable {
     }
 
     fun goToWebSite(url: String) {
-        this._webView?.loadUrl(url)
+        this.webView?.loadUrl(url)
     }
 
     fun pauseWebView() {
-        this._webView?.onPause()
+        this.webView?.onPause()
     }
 
     fun resumeWebView() {
-        this._webView?.onResume()
+        this.webView?.onResume()
     }
 
     fun getUrl(): String {
-        return this._webView?.url ?: ""
+        return this.webView?.url ?: ""
     }
 
     fun stopWebView() {
-        this._webView?.stopLoading()
-        this._webView?.removeAllViews()
-        this._webView?.destroy()
-        this._webView = null
+        this.webView?.stopLoading()
+        this.webView?.removeAllViews()
+        this.webView?.destroy()
+        this.webView = null
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

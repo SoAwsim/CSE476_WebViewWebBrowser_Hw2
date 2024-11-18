@@ -28,6 +28,25 @@ class BrowserControllerFactory(activity: MainActivity) {
             tab.text = adapter.tabListReadOnly[position].webViewController?.tabName
                 ?: ("Tab " + (position + 1))
         }.attach()
+
+        tabLayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab == null)
+                    return
+
+                val pos = tab.position
+                text.setText(_activity.tabList[pos].webViewController?.getUrl())
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                if (tab == null)
+                    return
+
+                adapter.closeTab(tab.position)
+            }
+        })
     }
 
     private fun initializeButtons() {
