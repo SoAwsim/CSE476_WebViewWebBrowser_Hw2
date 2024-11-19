@@ -3,7 +3,6 @@ package com.example.cse476.webviewbrowser.controller.webview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.Bundle
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -26,7 +25,6 @@ class WebViewControllerFactory {
         index: Int,
         context: Context,
         webSite: String? = null,
-        webViewState: Bundle? = null
     ): WebViewController {
         val controller = WebViewController()
         controller.updateWebSiteName("Tab " + (index + 1))
@@ -36,8 +34,7 @@ class WebViewControllerFactory {
             webView,
             index,
             context,
-            webSite,
-            webViewState
+            webSite
         )
 
         return controller
@@ -49,8 +46,7 @@ class WebViewControllerFactory {
         webView: WebView,
         index: Int,
         context: Context,
-        webSite: String? = null,
-        webViewState: Bundle? = null
+        webSite: String? = null
     ) {
         controller.attachResources(context.resources)
         controller.attachWebView(webView)
@@ -93,8 +89,6 @@ class WebViewControllerFactory {
             }
         }
         webView.settings.javaScriptEnabled = true
-        if (webViewState != null)
-            webView.restoreState(webViewState)
 
         if (webSite != null)
             controller.goToWebSite(webSite)

@@ -4,21 +4,26 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ImageSpan
+import android.util.Log
 import android.webkit.WebView
 import com.example.cse476.webviewbrowser.MainActivity
 
 class WebViewController() : Parcelable {
     val tabName : SpannableString
         get() {
+            if (this._webSiteName == null)
+                return SpannableString("New Tab")
+
             if (this._icon == null || this._resources == null)
                 return SpannableString(this._webSiteName)
 
-            val span = SpannableString("  " + this._webSiteName)
+            val spanWithIcon = SpannableString("  " + this._webSiteName)
             val icon = BitmapDrawable(this._resources, this._icon)
             val aspectRatio =
                 icon.intrinsicWidth.toFloat() / icon.intrinsicHeight.toFloat()
@@ -28,31 +33,34 @@ class WebViewController() : Parcelable {
                 (MainActivity.textSize * aspectRatio).toInt(),
                 MainActivity.textSize.toInt()
             )
-            span.setSpan(
+            spanWithIcon.setSpan(
                 ImageSpan(icon, ImageSpan.ALIGN_BOTTOM),
                 0,
                 1,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            return span
+            return spanWithIcon
         }
 
     // Attachable
-    var webView : WebView? = null
-        private set
+    private var webView : WebView? = null
     private var _resources: Resources? = null
 
     // Parcelable
     private var _webSiteName: String? = null
     private var _icon: Bitmap? = null
+    private var _webViewBundle: Bundle? = null
 
-    constructor(parcel: Parcel) : this() {
+    constructor(parcel: Parcel): this() {
         this._webSiteName = parcel.readString()
+
         this._icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             parcel.readParcelable(Bitmap::class.java.classLoader, Bitmap::class.java)
         } else {
             parcel.readParcelable(Bitmap::class.java.classLoader)
         }
+
+        this._webViewBundle = parcel.readBundle(Bundle::class.java.classLoader)
     }
 
     fun attachResources(resources: Resources) {
@@ -61,8 +69,23 @@ class WebViewController() : Parcelable {
     }
 
     fun attachWebView(webView: WebView) {
-        if (this.webView == null)
-            this.webView = webView
+        if (this.webView != null)
+            return
+
+        this.webView = webView
+
+        if (this._webViewBundle == null)
+            return
+
+        try {
+            this.webView?.restoreState(this._webViewBundle!!)
+        } catch (e: Exception) {
+            // If restore somehow fails set controller like a new tab
+            Log.w("WebViewController", "attachWebView: restoring WebView state failed", e)
+            this._webSiteName = null
+            this._icon = null
+        }
+        this._webViewBundle = null
     }
 
     fun updateWebSiteName(name: String) {
@@ -99,8 +122,17 @@ class WebViewController() : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(_webSiteName)
         parcel.writeParcelable(this._icon, flags)
+
+        this._webViewBundle = Bundle()
+        try {
+            this.webView?.saveState(this._webViewBundle!!)
+        } catch (e: Exception) {
+            Log.w("WebViewController", "writeToParcel: Saving WebView state failed", e)
+        }
+        parcel.writeBundle(this._webViewBundle)
     }
 
+    // Parcelable requires me to override it irrelevant for my use case
     override fun describeContents(): Int {
         return 0
     }

@@ -16,7 +16,6 @@ class WebViewFragmentActivity : Fragment() {
     companion object {
         const val TAB_INDEX = "tab_index"
         const val WEBSITE_NAME = "web_site_name"
-        const val WEBVIEW_STATE = "webview_state"
 
         private const val CONTROLLER = "webview_controller"
     }
@@ -53,14 +52,12 @@ class WebViewFragmentActivity : Fragment() {
         val factory = WebViewControllerFactory()
 
         val webSite = savedInstanceState?.getString(WEBSITE_NAME)
-        val webViewState = savedInstanceState?.getBundle(WEBVIEW_STATE)
         if (this.webViewController == null) {
             this.webViewController = factory.newWebViewController(
                 webView,
                 this.initialIndex,
                 this.requireContext(),
-                webSite,
-                webViewState
+                webSite
             )
         } else {
             factory.setupController(
@@ -68,8 +65,7 @@ class WebViewFragmentActivity : Fragment() {
                 webView,
                 this.initialIndex,
                 this.requireContext(),
-                webSite,
-                webViewState
+                webSite
             )
         }
         webViewContainer.addView(webView)
@@ -90,10 +86,6 @@ class WebViewFragmentActivity : Fragment() {
         outState.putInt(TAB_INDEX, this.initialIndex)
         outState.putString(WEBSITE_NAME, this.webViewController?.getUrl())
         outState.putParcelable(CONTROLLER, webViewController)
-
-        val webViewState = Bundle()
-        this.webViewController?.webView?.saveState(webViewState)
-        outState.putBundle(WEBVIEW_STATE, webViewState)
     }
 
     override fun onDestroyView() {
