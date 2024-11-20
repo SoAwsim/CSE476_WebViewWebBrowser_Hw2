@@ -41,17 +41,21 @@ class WebViewController() : Parcelable {
             )
             return spanWithIcon
         }
-
-    // Attachable
-    private var webView : WebView? = null
-    private var _resources: Resources? = null
+    // Related fragment's id
+    var fragmentId: Long = System.currentTimeMillis()
+        private set
 
     // Parcelable
     private var _webSiteName: String? = null
     private var _icon: Bitmap? = null
     private var _webViewBundle: Bundle? = null
 
+    // Attachable
+    private var webView : WebView? = null
+    private var _resources: Resources? = null
+
     constructor(parcel: Parcel): this() {
+        this.fragmentId = parcel.readLong()
         this._webSiteName = parcel.readString()
 
         this._icon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,14 +72,15 @@ class WebViewController() : Parcelable {
             this._resources = resources
     }
 
-    fun attachWebView(webView: WebView) {
+    // Returns whether given WebView was attached
+    fun attachWebView(webView: WebView): Boolean {
         if (this.webView != null)
-            return
+            return false
 
         this.webView = webView
 
         if (this._webViewBundle == null)
-            return
+            return true
 
         try {
             this.webView?.restoreState(this._webViewBundle!!)
@@ -86,9 +91,10 @@ class WebViewController() : Parcelable {
             this._icon = null
         }
         this._webViewBundle = null
+        return true
     }
 
-    fun updateWebSiteName(name: String) {
+    fun updateWebSiteName(name: String?) {
         this._webSiteName = name
     }
 
@@ -120,7 +126,8 @@ class WebViewController() : Parcelable {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(_webSiteName)
+        parcel.writeLong(this.fragmentId)
+        parcel.writeString(this._webSiteName)
         parcel.writeParcelable(this._icon, flags)
 
         this._webViewBundle = Bundle()

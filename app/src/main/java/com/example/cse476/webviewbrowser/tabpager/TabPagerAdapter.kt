@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.cse476.webviewbrowser.MainActivity
 import com.example.cse476.webviewbrowser.R
-import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentActivity
+import com.example.cse476.webviewbrowser.controller.webview.WebViewController
 import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
@@ -12,12 +12,7 @@ import com.google.android.material.textfield.TextInputEditText
 class TabPagerAdapter(
     fragmentActivity: MainActivity,
 ) : FragmentStateAdapter(fragmentActivity), ITabPagerAdapter {
-    override val tabListReadOnly: List<WebViewFragmentActivity>
-        get() {
-            return tabList
-        }
-
-    private val tabList: MutableList<WebViewFragmentActivity> = fragmentActivity.tabList
+    private val tabList: MutableList<WebViewController> = fragmentActivity.tabList
     private val tabLayout = fragmentActivity.findViewById<TabLayout>(R.id.tabLayout)
     private val textEdit = fragmentActivity.findViewById<TextInputEditText>(R.id.urlField)
 
@@ -25,30 +20,31 @@ class TabPagerAdapter(
         return this.tabList.size
     }
 
-    override fun createFragment(position: Int): Fragment {
-        return this.tabList[position]
-    }
-
     override fun getItemId(position: Int): Long {
-        return tabList[position].arguments?.getInt(WebViewFragmentActivity.TAB_INDEX)?.toLong()
-            ?: position.toLong()
+        return this.tabList[position].fragmentId
     }
 
     override fun containsItem(itemId: Long): Boolean {
-        return tabList.any {
-            it.arguments?.getInt(WebViewFragmentActivity.TAB_INDEX)?.toLong() == itemId
-        }
+        return tabList.any { it.fragmentId == itemId }
+    }
+
+    override fun createFragment(position: Int): Fragment {
+        return WebViewFragmentFactory.newWebViewFragment(this.tabList[position])
     }
 
     override fun createNewTab() {
         val addedIndex = tabList.size
-        this.tabList.add(WebViewFragmentFactory.newWebViewFragment(addedIndex))
+        this.tabList.add(WebViewController())
         this.notifyItemInserted(addedIndex)
     }
 
-    override fun setTabName(index: Int) {
+    override fun setTabName(controller: WebViewController) {
+        val index = this.tabList.indexOf(controller)
+        if (index == -1)
+            return
+
         val tab = this.tabLayout.getTabAt(index)
-        tab?.text = this.tabList[index].webViewController?.tabName
+        tab?.text = this.tabList[index].tabName
     }
 
     override fun setUrl(url: String) {
@@ -56,7 +52,7 @@ class TabPagerAdapter(
     }
 
     override fun goToWebSiteTab(index: Int, site: String) {
-        this.tabList[index].webViewController?.goToWebSite(site)
+        this.tabList[index].goToWebSite(site)
     }
 
     override fun closeTab(position: Int) {

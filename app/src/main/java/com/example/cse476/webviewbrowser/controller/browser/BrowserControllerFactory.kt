@@ -4,7 +4,7 @@ import android.widget.Button
 import androidx.viewpager2.widget.ViewPager2
 import com.example.cse476.webviewbrowser.MainActivity
 import com.example.cse476.webviewbrowser.R
-import com.example.cse476.webviewbrowser.controller.webview.WebViewControllerFactory
+import com.example.cse476.webviewbrowser.controller.webview.CustomWebViewFactory
 import com.example.cse476.webviewbrowser.tabpager.TabPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -19,7 +19,7 @@ class BrowserControllerFactory(activity: MainActivity) {
         val tabLayout = this._activity.findViewById<TabLayout>(R.id.tabLayout)
         val text = this._activity.findViewById<TextInputEditText>(R.id.urlField)
         val adapter = TabPagerAdapter(this._activity)
-        WebViewControllerFactory.setTabPager(adapter)
+        CustomWebViewFactory.setTabPager(adapter)
         this._browserController = BrowserController(
             adapter,
             tabLayout,
@@ -30,8 +30,7 @@ class BrowserControllerFactory(activity: MainActivity) {
 
         viewPager2.adapter = adapter
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.text = adapter.tabListReadOnly[position].webViewController?.tabName
-                ?: ("Tab " + (position + 1))
+            tab.text = this._activity.tabList[position].tabName
         }.attach()
 
         tabLayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
@@ -40,11 +39,13 @@ class BrowserControllerFactory(activity: MainActivity) {
                     return
 
                 val pos = tab.position
-                text.setText(_activity.tabList[pos].webViewController?.getUrl())
+                if (pos != tabLayout.selectedTabPosition)
+                    return
+
+                text.setText(_activity.tabList[pos].getUrl())
+                tab.text = _activity.tabList[pos].tabName
             }
-
             override fun onTabUnselected(tab: TabLayout.Tab?) { }
-
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 if (tab == null)
                     return
@@ -52,6 +53,8 @@ class BrowserControllerFactory(activity: MainActivity) {
                 adapter.closeTab(tab.position)
             }
         })
+        if (this._activity.tabList.isEmpty())
+            adapter.createNewTab()
     }
 
     private fun initializeButtons() {

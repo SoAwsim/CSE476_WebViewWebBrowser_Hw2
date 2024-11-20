@@ -9,9 +9,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.example.cse476.webviewbrowser.tabpager.ITabPagerAdapter
 
-class WebViewControllerFactory {
+class CustomWebViewFactory {
     companion object{
-        private var _tabPagerAdapter: ITabPagerAdapter? = null
+        private lateinit var _tabPagerAdapter: ITabPagerAdapter
 
         @JvmStatic
         fun setTabPager(pager: ITabPagerAdapter) {
@@ -20,42 +20,20 @@ class WebViewControllerFactory {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    fun newWebViewController(
-        webView: WebView,
-        index: Int,
-        context: Context,
-        webSite: String? = null,
-    ): WebViewController {
-        val controller = WebViewController()
-        controller.updateWebSiteName("Tab " + (index + 1))
-
-        this.setupController(
-            controller,
-            webView,
-            index,
-            context,
-            webSite
-        )
-
-        return controller
-    }
-
-    @SuppressLint("SetJavaScriptEnabled")
-    fun setupController(
+    fun newCustomWebView(
         controller: WebViewController,
-        webView: WebView,
-        index: Int,
         context: Context,
         webSite: String? = null
-    ) {
+    ): WebView {
+        val webView = WebView(context)
         controller.attachResources(context.resources)
         controller.attachWebView(webView)
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onReceivedTitle(view: WebView?, title: String?) {
                 super.onReceivedTitle(view, title)
-                controller.updateWebSiteName(title ?: ("Tab " + (index + 1)))
-                _tabPagerAdapter!!.setTabName(index)
+                controller.updateWebSiteName(title)
+                _tabPagerAdapter.setTabName(controller)
             }
 
             override fun onReceivedIcon(view: WebView?, icon: Bitmap?) {
@@ -64,7 +42,7 @@ class WebViewControllerFactory {
                     controller.updateWebSiteIcon(null)
                 else
                     controller.updateWebSiteIcon(icon)
-                _tabPagerAdapter!!.setTabName(index)
+                _tabPagerAdapter.setTabName(controller)
             }
         }
         webView.webViewClient = object : WebViewClient() {
@@ -85,12 +63,14 @@ class WebViewControllerFactory {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                _tabPagerAdapter!!.setUrl(url ?: "")
+                _tabPagerAdapter.setUrl(url ?: "")
             }
         }
         webView.settings.javaScriptEnabled = true
 
         if (webSite != null)
             controller.goToWebSite(webSite)
+
+        return webView
     }
 }

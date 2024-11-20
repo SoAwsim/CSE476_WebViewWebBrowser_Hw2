@@ -1,15 +1,15 @@
 package com.example.cse476.webviewbrowser.webbiewfragment
 
-import android.os.Bundle
+import com.example.cse476.webviewbrowser.controller.webview.WebViewController
 
 class WebViewFragmentFactory {
     companion object {
+
         @JvmStatic
-        fun newWebViewFragment(index: Int) =
-            WebViewFragmentActivity().apply {
-                arguments = Bundle().apply {
-                    putInt(WebViewFragmentActivity.TAB_INDEX, index)
-                }
-            }
+        fun newWebViewFragment(controller: WebViewController): WebViewFragmentActivity {
+            val fragment = WebViewFragmentActivity()
+            fragment.attachController(controller)
+            return fragment
+        }
     }
 }

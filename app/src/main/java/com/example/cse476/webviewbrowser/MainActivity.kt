@@ -1,5 +1,6 @@
 package com.example.cse476.webviewbrowser
 
+import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.activity.enableEdgeToEdge
@@ -7,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.cse476.webviewbrowser.controller.browser.BrowserControllerFactory
-import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentActivity
-import com.example.cse476.webviewbrowser.webbiewfragment.WebViewFragmentFactory
+import com.example.cse476.webviewbrowser.controller.webview.WebViewController
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAB = "TAB_COUNT"
     }
 
-    var tabList: MutableList<WebViewFragmentActivity> = mutableListOf()
+    var tabList: MutableList<WebViewController> = mutableListOf()
         private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,13 +32,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState != null) {
-            val indices = savedInstanceState.getIntegerArrayList(TAB) ?: listOf()
-            tabList = indices.map { index ->
-                supportFragmentManager.findFragmentByTag("f$index") as? WebViewFragmentActivity
-                    ?: WebViewFragmentFactory.newWebViewFragment(index)
-            }.toMutableList()
-        } else {
-            tabList.add(WebViewFragmentFactory.newWebViewFragment(0))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                this.tabList = savedInstanceState
+                    .getParcelableArrayList(TAB, WebViewController::class.java)
+                    ?.toMutableList() ?: this.tabList
+            } else {
+                this.tabList =
+                    savedInstanceState
+                        .getParcelableArrayList<WebViewController>(TAB)?.toMutableList()
+                        ?: this.tabList
+            }
         }
 
         // Set correct text size for tab names, used for web site icons
@@ -53,7 +56,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        val indices = tabList.map { it.arguments?.getInt(WebViewFragmentActivity.TAB_INDEX) ?: 0 } as ArrayList
-        outState.putIntegerArrayList(TAB, indices)
+        outState.putParcelableArrayList(TAB, ArrayList(this.tabList))
     }
 }
