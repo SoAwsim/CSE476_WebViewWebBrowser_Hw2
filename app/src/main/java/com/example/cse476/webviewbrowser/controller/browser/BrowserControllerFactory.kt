@@ -32,6 +32,7 @@ class BrowserControllerFactory(activity: MainActivity) {
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.text = this._activity.tabList[position].tabName
         }.attach()
+        viewPager2.setUserInputEnabled(false)
 
         tabLayout.addOnTabSelectedListener(object  : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
