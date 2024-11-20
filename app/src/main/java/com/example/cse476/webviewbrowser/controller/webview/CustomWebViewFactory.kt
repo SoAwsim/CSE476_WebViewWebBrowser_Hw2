@@ -50,6 +50,8 @@ class CustomWebViewFactory {
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
+                controller.updateWebSiteIcon(null)
+                _tabPagerAdapter.setTabName(controller)
                 return false
             }
 
@@ -58,6 +60,8 @@ class CustomWebViewFactory {
                 view: WebView?,
                 url: String?
             ): Boolean {
+                controller.updateWebSiteIcon(null)
+                _tabPagerAdapter.setTabName(controller)
                 return false
             }
 

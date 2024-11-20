@@ -103,6 +103,7 @@ class WebViewController() : Parcelable {
     }
 
     fun goToWebSite(url: String) {
+        this._icon = null
         this.webView?.loadUrl(url)
     }
 
