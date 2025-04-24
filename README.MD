@@ -1,4 +1,4 @@
-# Yeditepe University CSE 476 Web View Assignment Assignment 2
+# Yeditepe University CSE 476 Web View Assignment 2
 
 In this assignment we were expected to implement a simple web browser using Android's builtin Web View.
 In addition to the core features I have implemented unlimited tab logic by implementing Android Life Cycle
