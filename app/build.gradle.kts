@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.example.cse476.webviewbrowser"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.cse476.webviewbrowser"
